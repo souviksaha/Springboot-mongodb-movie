@@ -1,6 +1,6 @@
 package com.project.myapp.controller;
 
-import java.util.List;
+import java.util.LinkedHashMap;
 
 import javax.validation.Valid;
 
@@ -24,17 +24,42 @@ public class MoviesController {
 	
 	// Get all the documents from the movie collection
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public List<Movies> getAllMovies() {	
+	public LinkedHashMap<String, Object> getAllMovies() {	
 		
-		return repo.findAll();		
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		
+		map.put("code", 200);
+		map.put("success", "true");
+		map.put("records", repo.findAll());
+		
+		return map;			
 		
 	}
 	
 	// Get a movie document using id	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public Movies getMovieById(@PathVariable("id") ObjectId id) {
+	public LinkedHashMap<String, Object> getMovieById(@PathVariable("id") ObjectId id) {
 		
-		return repo.findBy_id(id);
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+
+		Movies movie = repo.findBy_id(id);
+		
+		// Validation error		
+		if (movie == null) {
+			
+			map.put("code", 400);
+			map.put("success", "false");
+			map.put("message", "Invalid Id");
+					
+			return map;
+			
+		}
+		
+		map.put("code", 200);
+		map.put("success", "true");
+		map.put("record", movie);
+		
+		return map;
 		
 	}
 	

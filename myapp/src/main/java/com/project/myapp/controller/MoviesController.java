@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.myapp.model.Movies;
 import com.project.myapp.repositories.MoviesRepository;
+import com.sun.javafx.collections.MappingChange.Map;
 
 @RestController
 @RequestMapping("/movies")
@@ -82,11 +83,32 @@ public class MoviesController {
 
 	// Update any movie record using id
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public void modifyMovieById (@PathVariable("id") ObjectId id, @Valid @RequestBody Movies movie) {
+	public LinkedHashMap<String, Object> modifyMovieById (@PathVariable("id") ObjectId id, @Valid @RequestBody Movies movie) {
+		
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		
+		Movies findMovie = repo.findBy_id(id);
+		
+		if (findMovie == null) {			
+
+			map.put("code", 400);
+			map.put("success", "false");
+			map.put("message", "Invalid Id");
+					
+			return map;		
+			
+		}
 		
 		movie.set_id(id);
 		repo.save(movie);
-		
+
+		map.put("code", 200);
+		map.put("success", "true");
+		map.put("message", "Updated successfully");
+		map.put("record", movie);
+				
+		return map;		
+			
 	}
 	
 	// Delete a movie by id

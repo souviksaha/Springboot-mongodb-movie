@@ -65,11 +65,18 @@ public class MoviesController {
 	
 	// Create a document for movie collections
 	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public Movies createMovies(@Valid @RequestBody Movies movies) {
+	public LinkedHashMap<String, Object> createMovies(@Valid @RequestBody Movies movies) {
+		
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();	
 		
 		movies.set_id(ObjectId.get());
-		repo.save(movies);
-		return movies;
+		repo.save(movies);			
+		
+		map.put("code", 200);
+		map.put("success", "true");
+		map.put("record", movies);
+		
+		return map;
 		
 	}
 

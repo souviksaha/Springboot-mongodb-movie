@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.myapp.model.Movies;
 import com.project.myapp.repositories.MoviesRepository;
-import com.sun.javafx.collections.MappingChange.Map;
 
 @RestController
 @RequestMapping("/movies")
@@ -88,7 +87,8 @@ public class MoviesController {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		
 		Movies findMovie = repo.findBy_id(id);
-		
+
+		// Check whether the id is valid or not
 		if (findMovie == null) {			
 
 			map.put("code", 400);
@@ -113,17 +113,45 @@ public class MoviesController {
 	
 	// Delete a movie by id
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public void deleteMovieById(@PathVariable("id") ObjectId id) {
+	public LinkedHashMap<String, Object> deleteMovieById(@PathVariable("id") ObjectId id) {
 		
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		
+		Movies findMovie = repo.findBy_id(id);
+
+		// Check whether the id is valid or not
+		if (findMovie == null) {			
+
+			map.put("code", 400);
+			map.put("success", "false");
+			map.put("message", "Invalid Id");
+					
+			return map;		
+			
+		}
+
 		repo.delete(repo.findBy_id(id));
+		
+		map.put("code", 200);
+		map.put("success", "true");
+		map.put("message", "Deleted successfully");
+		map.put("Id", id);
+		return map;						
 		
 	}
 	
-	// Delete all movies from the database	
+	// Delete all movies documents from the database	
 	@RequestMapping(value = "/all", method = RequestMethod.DELETE)
-	public void deleteAllMovies() {
+	public LinkedHashMap<String, Object> deleteAllMovies() {
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		
 		repo.deleteAll();
+		
+		map.put("code", 200);
+		map.put("success", "true");
+		map.put("message", "Deleted all records successfully");		
+		return map;										
 		
 	}
 	

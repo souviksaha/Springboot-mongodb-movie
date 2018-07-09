@@ -20,7 +20,7 @@ import com.project.myapp.repositories.MoviesRepository;
 public class MoviesController {
 
 	@Autowired
-	private MoviesRepository repo;
+	private MoviesRepository repo;	
 	
 	// Get all the documents from the movie collection
 	@RequestMapping(value = "/", method = RequestMethod.GET)

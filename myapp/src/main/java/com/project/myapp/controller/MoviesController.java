@@ -30,6 +30,7 @@ public class MoviesController {
 		
 		map.put("code", 200);
 		map.put("success", "true");
+		map.put("total_records", repo.findAll().size());
 		map.put("records", repo.findAll());
 		
 		return map;			
@@ -146,10 +147,23 @@ public class MoviesController {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		
+		int size = repo.findAll().size();
+		
+		if (size == 0) {
+			
+			map.put("code", 400);
+			map.put("success", "false");
+			map.put("total_records", size);
+			map.put("message", "No records");		
+			return map;							
+			
+		}
+		
 		repo.deleteAll();
 		
 		map.put("code", 200);
 		map.put("success", "true");
+		map.put("total_records", size);
 		map.put("message", "Deleted all records successfully");		
 		return map;										
 		
